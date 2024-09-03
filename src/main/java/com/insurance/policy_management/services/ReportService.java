@@ -1,5 +1,6 @@
 package com.insurance.policy_management.services;
 
+import com.insurance.policy_management.exceptions.ResourceNotFoundException;
 import com.insurance.policy_management.model.Policy;
 import com.insurance.policy_management.repository.PolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,13 @@ public class ReportService {
         return policyRepository.findAll().stream()
                 .filter(policy -> policy.getType().equalsIgnoreCase(type))
                 .collect(Collectors.groupingBy(Policy::getType));
+    }
+
+    public List<Policy> getPoliciesByDateRange(Date startDate, Date endDate) {
+        List<Policy> policies = policyRepository.findByDateRange(startDate, endDate);
+        if (policies.isEmpty()) {
+            throw new ResourceNotFoundException("No policies found for the given date range");
+        }
+        return policies;
     }
 }

@@ -1,5 +1,6 @@
 package com.insurance.policy_management.services;
 
+import com.insurance.policy_management.exceptions.ResourceNotFoundException;
 import com.insurance.policy_management.model.Customer;
 import com.insurance.policy_management.model.Policy;
 import com.insurance.policy_management.repository.CustomerRepository;
@@ -23,7 +24,7 @@ public class PolicyService {
         Optional<Customer> customerOptional = customerRepository.findById(policy.getCustomer().getId());
 
         if (!customerOptional.isPresent()) {
-            throw new RuntimeException("Customer not found with id: " + policy.getCustomer().getId());
+            throw new ResourceNotFoundException("Customer not found with id: " + policy.getCustomer().getId());
         }
 
         policy.setCustomer(customerOptional.get());
@@ -35,12 +36,13 @@ public class PolicyService {
     }
 
     public Optional<Policy> getPolicyById(Long id) {
-        return policyRepository.findById(id);
+        return Optional.ofNullable(policyRepository.findById(id))
+                .orElseThrow(() -> new ResourceNotFoundException("Policy not found with id: " + id));
     }
 
     public Policy updatePolicy(Long id, Policy policyDetails) {
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Policy not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Policy not found with id: " + id));
         policy.setPolicyNumber(policyDetails.getPolicyNumber());
         policy.setType(policyDetails.getType());
         policy.setCoverageAmount(policyDetails.getCoverageAmount());
@@ -52,7 +54,7 @@ public class PolicyService {
 
     public void deletePolicy(Long id) {
         Policy policy = policyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Policy not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Policy not found with id: " + id));
         policyRepository.delete(policy);
     }
 }
