@@ -24,8 +24,4 @@ public class Claim {
     @ManyToOne
     @JoinColumn(name = "policy_id", nullable = false)
     private Policy policy;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
 }

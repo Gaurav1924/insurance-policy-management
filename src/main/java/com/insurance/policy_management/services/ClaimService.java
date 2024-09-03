@@ -1,7 +1,7 @@
 package com.insurance.policy_management.services;
 
+import com.insurance.policy_management.exceptions.ResourceNotFoundException;
 import com.insurance.policy_management.model.Claim;
-import com.insurance.policy_management.model.Customer;
 import com.insurance.policy_management.model.Policy;
 import com.insurance.policy_management.repository.ClaimRepository;
 import com.insurance.policy_management.repository.PolicyRepository;
@@ -24,7 +24,7 @@ public class ClaimService {
         Optional<Policy> policyOptional = policyRepository.findById(claim.getPolicy().getId());
 
         if (!policyOptional.isPresent()) {
-            throw new RuntimeException("Policy not found with id: " + claim.getPolicy().getId());
+            throw new ResourceNotFoundException("Policy not found with id: " + claim.getPolicy().getId());
         }
 
         claim.setPolicy(policyOptional.get());
@@ -35,13 +35,15 @@ public class ClaimService {
         return claimRepository.findAll();
     }
 
+
     public Optional<Claim> getClaimById(Long id) {
-        return claimRepository.findById(id);
+        return Optional.ofNullable(claimRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + id)));
     }
 
     public Claim updateClaim(Long id, Claim claimDetails) {
         Claim claim = claimRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Claim not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + id));
         claim.setClaimAmount(claimDetails.getClaimAmount());
         claim.setDateOfIncident(claimDetails.getDateOfIncident());
         claim.setDescription(claimDetails.getDescription());
@@ -51,7 +53,7 @@ public class ClaimService {
 
     public void deleteClaim(Long id) {
         Claim claim = claimRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Claim not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + id));
         claimRepository.delete(claim);
     }
 }
