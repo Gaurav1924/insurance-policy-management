@@ -36,7 +36,7 @@ public class PolicyController {
     public ResponseEntity<ApiResponse> getAllPolicies() {
         List<Policy> policies = policyService.getAllPolicies();
         if (policies.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+            return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse(true, "No policies found"));
         }
         return ResponseEntity.ok(new ApiResponse(true, "Policies retrieved successfully", policies));

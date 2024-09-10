@@ -8,12 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
 @Table(name = "customers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer {
+public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +27,6 @@ public class Customer {
     private String name;
 
     @NotBlank(message = "Contact information is required")
-    @Email(message = "Contact information should be a valid email address")
     @Column(unique = true)
     private String contactInformation;
 

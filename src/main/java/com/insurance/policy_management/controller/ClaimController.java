@@ -36,7 +36,7 @@ public class ClaimController {
     public ResponseEntity<ApiResponse> getAllClaims() {
         List<Claim> claims = claimService.getAllClaims();
         if (claims.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+            return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse(true, "No claims found"));
         }
         return ResponseEntity.ok(new ApiResponse(true, "Claims retrieved successfully", claims));
