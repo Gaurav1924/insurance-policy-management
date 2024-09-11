@@ -46,6 +46,6 @@ public class Policy implements Serializable {
     private Double premium;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 }
