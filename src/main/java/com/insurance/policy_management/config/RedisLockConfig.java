@@ -1,4 +1,4 @@
-package com.insurance.policy_management.model;
+package com.insurance.policy_management.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

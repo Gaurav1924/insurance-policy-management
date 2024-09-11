@@ -1,4 +1,4 @@
-package com.insurance.policy_management.model;
+package com.insurance.policy_management.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
