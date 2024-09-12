@@ -1,8 +1,9 @@
 package com.insurance.policy_management.controller;
 
 import com.insurance.policy_management.dto.ApiResponse;
+import com.insurance.policy_management.dto.CustomerRequestDto;
 import com.insurance.policy_management.model.Customer;
-import com.insurance.policy_management.services.CustomerService;
+import com.insurance.policy_management.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,13 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createCustomer(@Valid @RequestBody Customer customer, BindingResult result) {
+    public ResponseEntity<ApiResponse> createCustomer(@Valid @RequestBody CustomerRequestDto RequestDto, BindingResult result) {
         if (result.hasErrors()) {
             String errorMessage = result.getFieldError().getDefaultMessage();
             return ResponseEntity.badRequest().body(new ApiResponse(false, errorMessage));
         }
 
-        Customer createdCustomer = customerService.createCustomer(customer);
+        Customer createdCustomer = customerService.createCustomer(RequestDto.getName(), RequestDto.getAddress(), RequestDto.getContactInformation(), RequestDto.getIdentificationDetails());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse(true, "Customer created successfully", createdCustomer));
     }

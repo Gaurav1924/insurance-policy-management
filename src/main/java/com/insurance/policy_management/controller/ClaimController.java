@@ -2,7 +2,7 @@ package com.insurance.policy_management.controller;
 
 import com.insurance.policy_management.dto.ApiResponse;
 import com.insurance.policy_management.model.Claim;
-import com.insurance.policy_management.services.ClaimService;
+import com.insurance.policy_management.service.ClaimService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class ClaimController {
     public ResponseEntity<ApiResponse> getAllClaims() {
         List<Claim> claims = claimService.getAllClaims();
         if (claims.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+            return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse(true, "No claims found"));
         }
         return ResponseEntity.ok(new ApiResponse(true, "Claims retrieved successfully", claims));
