@@ -37,9 +37,17 @@ public class ReportController {
     }
 
     @GetMapping("/summary-by-customer")
-    public ResponseEntity<ApiResponse> getPoliciesSummaryByCustomer() {
-        Map<String, List<Policy>> summary = reportService.generatePoliciesSummaryByCustomer();
-        return ResponseEntity.ok(new ApiResponse(true, "Policies summary by customer retrieved successfully", summary));
+    public ResponseEntity<ApiResponse> getPoliciesSummaryByCustomer(@RequestParam(value = "customerId", required = false) Long customerId) {
+        Map<String, List<Policy>> summary;
+
+        // Check if customerId is passed; fetch summary accordingly
+        if (customerId != null) {
+            summary = reportService.generatePoliciesSummaryByCustomer(customerId);
+        } else {
+            summary = reportService.generatePoliciesSummaryForAllCustomers();
+        }
+
+        return ResponseEntity.ok(new ApiResponse(true, "Policies summary retrieved successfully", summary));
     }
 
     @GetMapping("/by-type")

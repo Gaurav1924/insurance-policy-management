@@ -45,7 +45,11 @@ public class Policy implements Serializable {
     @Positive(message = "Premium must be greater than 0")
     private Double premium;
 
-    @ManyToOne
+
+//    @JoinColumn(name = "customer_id", nullable = true)
+//    private Customer customer;
+//@ManyToOne
     @JoinColumn(name = "customer_id", nullable = true)
-    private Customer customer;
+    private Long customerId;
 }
+

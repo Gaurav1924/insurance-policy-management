@@ -28,16 +28,20 @@ public class ClaimService {
     @CachePut(value = "claims", key = "#claim.id")
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public Claim fileClaim(Claim claim) {
-        Optional<Policy> policyOptional = policyRepository.findById(claim.getPolicy().getId());
+        // Fetch the policy using policy_id from the claim
+        Optional<Policy> policyOptional = policyRepository.findById(claim.getPolicyId());
 
         if (!policyOptional.isPresent()) {
-            throw new ResourceNotFoundException("Policy not found with id: " + claim.getPolicy().getId());
+            throw new ResourceNotFoundException("Policy not found with id: " + claim.getPolicyId());
         }
+
+        // Fetch the associated policy to ensure it's valid and has a customer
         Policy policy = policyOptional.get();
-        if (policy.getCustomer() == null || policy.getCustomer().getId() == null) {
+        if (policy.getCustomerId() == null) {
             throw new IllegalStateException("Customer is not set for this policy. 'customer_id' cannot be null.");
         }
-        claim.setPolicy(policyOptional.get());
+
+        // The policy_id is already stored in claim, so no need to set policy again
         return claimRepository.save(claim);
     }
 
