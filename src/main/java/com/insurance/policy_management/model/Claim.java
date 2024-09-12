@@ -15,15 +15,19 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Claim implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Double claimAmount;
+
+    @Temporal(TemporalType.DATE)
     private Date dateOfIncident;
+
     private String description;
     private String status;
 
-    @ManyToOne
     @JoinColumn(name = "policy_id", nullable = false)
-    private Policy policy;
+    private Long policyId;  // Store the policy_id directly as a Long
 }

@@ -28,16 +28,17 @@ public class PolicyService {
     @CachePut(value = "policy", key = "#policy.id")
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public Policy createPolicy(Policy policy) {
-        Optional<Customer> customerOptional = customerRepository.findById(policy.getCustomer().getId());
+        Optional<Customer> customerOptional = customerRepository.findById(policy.getCustomerId());
 
         if (!customerOptional.isPresent()) {
-            throw new ResourceNotFoundException("Customer not found with id: " + policy.getCustomer().getId());
+            throw new ResourceNotFoundException("Customer not found with id: " + policy.getCustomerId());
         }
 
-        policy.setCustomer(customerOptional.get());
+        Customer customer = customerOptional.get();
+        policy.setCustomerId(customer.getId());
+
         return policyRepository.save(policy);
     }
-
     @Cacheable(value = "policies")
     public List<Policy> getAllPolicies() {
         return policyRepository.findAll();
