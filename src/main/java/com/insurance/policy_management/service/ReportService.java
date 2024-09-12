@@ -1,4 +1,4 @@
-package com.insurance.policy_management.services;
+package com.insurance.policy_management.service;
 
 import com.insurance.policy_management.exceptions.ResourceNotFoundException;
 import com.insurance.policy_management.model.Policy;

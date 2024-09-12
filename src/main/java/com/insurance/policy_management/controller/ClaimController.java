@@ -2,7 +2,7 @@ package com.insurance.policy_management.controller;
 
 import com.insurance.policy_management.dto.ApiResponse;
 import com.insurance.policy_management.model.Claim;
-import com.insurance.policy_management.services.ClaimService;
+import com.insurance.policy_management.service.ClaimService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -2,10 +2,9 @@ package com.insurance.policy_management.controller;
 
 import com.insurance.policy_management.dto.ApiResponse;
 import com.insurance.policy_management.model.Policy;
-import com.insurance.policy_management.services.ReportService;
+import com.insurance.policy_management.service.ReportService;
 import jakarta.validation.constraints.PastOrPresent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;

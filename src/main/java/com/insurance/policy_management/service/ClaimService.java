@@ -1,4 +1,4 @@
-package com.insurance.policy_management.services;
+package com.insurance.policy_management.service;
 
 import com.insurance.policy_management.exceptions.ResourceNotFoundException;
 import com.insurance.policy_management.model.Claim;
@@ -10,6 +10,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +26,17 @@ public class ClaimService {
     private PolicyRepository policyRepository;
 
     @CachePut(value = "claims", key = "#claim.id")
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Claim fileClaim(Claim claim) {
         Optional<Policy> policyOptional = policyRepository.findById(claim.getPolicy().getId());
 
         if (!policyOptional.isPresent()) {
             throw new ResourceNotFoundException("Policy not found with id: " + claim.getPolicy().getId());
         }
-
+        Policy policy = policyOptional.get();
+        if (policy.getCustomer() == null || policy.getCustomer().getId() == null) {
+            throw new IllegalStateException("Customer is not set for this policy. 'customer_id' cannot be null.");
+        }
         claim.setPolicy(policyOptional.get());
         return claimRepository.save(claim);
     }
@@ -47,6 +53,7 @@ public class ClaimService {
     }
 
     @CachePut(value = "claim", key = "#id")
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Claim updateClaim(Long id, Claim claimDetails) {
         Claim claim = claimRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + id));
@@ -57,11 +64,8 @@ public class ClaimService {
         return claimRepository.save(claim);
     }
 
-    /**
-     * Deletes a claim from both the database and cache.
-     * @param id ID of the claim to be deleted
-     */
     @CacheEvict(value = "claim", key = "#id")
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void deleteClaim(Long id) {
         Claim claim = claimRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Claim not found with id: " + id));
